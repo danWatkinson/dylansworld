@@ -5,12 +5,14 @@ services:
     ports:
       - "25565:25565/tcp"   # Java Edition port
       - "19132:19132/udp"   # Bedrock Edition port
+    env_file:
+      - .env
     environment:
-      - EULA=true
-      - MINECRAFT_VERSION=latest
-      - PAPER_BUILD=latest
-      - GEYSER_VERSION=latest
-      - MEMORY=2G
+      - EULA=${EULA:-true}
+      - MINECRAFT_VERSION=${MINECRAFT_VERSION:-latest}
+      - PAPER_BUILD=${PAPER_BUILD:-latest}
+      - GEYSER_VERSION=${GEYSER_VERSION:-latest}
+      - MEMORY=${MEMORY:-2G}
     volumes:
       - ./data:/minecraft/world
       - ./plugins:/minecraft/plugins

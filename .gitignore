@@ -1,3 +1,6 @@
+# Environment variables (contains local configuration)
+.env
+
 # Minecraft server files
 data/
 logs/

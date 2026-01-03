@@ -14,19 +14,26 @@ The server uses:
 
 1. **Clone or download this repository**
 
-2. **Start the server:**
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` to customize your server configuration (memory, versions, etc.). The `.env` file is git-ignored and contains your local settings.
+
+3. **Start the server:**
    ```bash
    docker compose up -d
    ```
    
    **Note**: If you're using Docker Compose V1 (older installations), use `docker-compose` instead of `docker compose`.
 
-3. **View logs:**
+4. **View logs:**
    ```bash
    docker compose logs -f
    ```
 
-4. **Stop the server:**
+5. **Stop the server:**
    ```bash
    docker compose down
    ```
@@ -35,13 +42,20 @@ The server uses:
 
 ### Environment Variables
 
-Edit `docker-compose.yml` to customize:
+Configuration is managed through the `.env` file. Copy `.env.example` to `.env` and customize as needed:
 
+```bash
+cp .env.example .env
+```
+
+The `.env` file contains:
 - `EULA`: Must be set to `true` to accept Minecraft EULA (required)
-- `MEMORY`: Java heap size (default: `2G`)
-- `MINECRAFT_VERSION`: Minecraft version (default: `latest`)
-- `PAPER_BUILD`: PaperMC build number (default: `latest`)
-- `GEYSER_VERSION`: GeyserMC version (default: `latest`)
+- `MEMORY`: Java heap size (default: `2G`). Adjust based on available system resources (e.g., `4G`, `8G`)
+- `MINECRAFT_VERSION`: Minecraft version (default: `latest`, or specify like `1.20.1`)
+- `PAPER_BUILD`: PaperMC build number (default: `latest`, or specify a build number)
+- `GEYSER_VERSION`: GeyserMC version (default: `latest`, or specify a version)
+
+**Important**: The `.env` file is git-ignored and will not be committed to the repository. This ensures your local configuration (including the EULA acceptance) stays private. Always copy `.env.example` to `.env` when setting up a new deployment.
 
 ### Ports
 
@@ -53,6 +67,16 @@ Make sure these ports are open in your firewall/router.
 ### Server Properties
 
 The `server.properties` file will be created automatically on first run. You can mount your own by uncommenting the volume mount in `docker-compose.yml`.
+
+### Security Notes
+
+**No Default Credentials**: This server setup does not include any default username/password combinations. 
+
+- **RCON**: Remote Console (RCON) is **disabled by default** for security. If you enable RCON in `server.properties` by setting `enable-rcon=true`, you **MUST** set a strong password using `rcon.password=your-strong-password`. Never enable RCON without setting a secure password.
+
+- **Player Authentication**: The server uses online mode by default, which requires players to authenticate with their Mojang/Microsoft accounts. No server-side passwords are required for players.
+
+- **Environment Variables**: All configuration is stored in `.env` (git-ignored) to prevent exposing settings publicly.
 
 ## Connecting to the Server
 
@@ -101,7 +125,8 @@ You can edit the Geyser config by mounting the config directory or copying it ou
 
 ### Server won't start
 
-- Make sure `EULA=true` is set in `docker-compose.yml`
+- Make sure you've created a `.env` file from `.env.example`
+- Make sure `EULA=true` is set in your `.env` file
 - Check logs: `docker compose logs` (or `docker-compose logs` for V1)
 - Ensure ports are not already in use
 
