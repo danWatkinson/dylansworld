@@ -1,14 +1,27 @@
 # Environment variables (contains local configuration)
 .env
 
-# Minecraft server files
-data/
-logs/
-plugins/*.jar
+# Runtime server data (worlds, logs, runtime plugins)
+runtime/
+
+# Server runtime files
 server.properties
 eula.txt
 *.jar
 *.log
+
+# Plugin build outputs
+plugins/build/
+plugins/*/build/
+plugins/*/target/
+plugins/*/.gradle/
+plugins/*/.idea/
+plugins/*/out/
+
+# Java build artifacts
+*.class
+*.jar
+!plugins/custom/*/src/**/*.jar
 
 # Docker
 .docker/
@@ -16,4 +29,9 @@ eula.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
 

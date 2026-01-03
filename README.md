@@ -1,42 +1,88 @@
-# Dockerized Minecraft Server (Java + Bedrock/Nintendo Switch)
+# Dylan's World - Minecraft Server & Plugin Development
 
-This setup provides a Dockerized Minecraft server that supports both:
-- **Java Edition** clients (PC, Mac, Linux)
-- **Bedrock Edition** clients (Nintendo Switch, Xbox, PlayStation, Mobile, Windows 10/11)
+A Dockerized Minecraft server setup with support for both Java and Bedrock (Nintendo Switch) clients, plus a development workspace for creating custom plugins, world generators, and content.
 
-## How It Works
+## Features
 
-The server uses:
-- **PaperMC**: A high-performance fork of Spigot for Java Edition
-- **GeyserMC**: A plugin/proxy that translates Bedrock protocol to Java protocol, allowing Bedrock clients to connect
+- **Multi-platform Server**: Supports Java Edition (PC/Mac/Linux) and Bedrock Edition (Nintendo Switch, Xbox, PlayStation, Mobile)
+- **Plugin Development Workspace**: Organized structure for developing custom Minecraft plugins
+- **World Generation Tools**: Ready for building landscape, feature, and POI generators
+- **Dockerized**: Easy setup and deployment using Docker
+
+## Project Structure
+
+```
+dylansworld/
+├── server/              # Server Docker configuration
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── entrypoint.sh
+├── plugins/             # Plugin development workspace
+│   ├── custom/          # Source code for custom plugins
+│   │   ├── landscape-generator/  # (future)
+│   │   ├── feature-generator/    # (future)
+│   │   └── poi-generator/        # (future)
+│   └── build/           # Build outputs (git-ignored)
+├── runtime/             # Server runtime data (git-ignored)
+│   ├── data/            # World files
+│   ├── logs/            # Server logs
+│   └── plugins/         # Runtime plugins (GeyserMC, custom plugins)
+├── docs/                # Documentation
+├── .env.example         # Environment variable template
+└── README.md            # This file
+```
 
 ## Quick Start
 
-1. **Clone or download this repository**
+### 1. Set Up Environment
 
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` to customize your server configuration (memory, versions, etc.). The `.env` file is git-ignored and contains your local settings.
+```bash
+# Clone the repository
+git clone https://github.com/danWatkinson/dylansworld.git
+cd dylansworld
 
-3. **Start the server:**
-   ```bash
-   docker compose up -d
-   ```
-   
-   **Note**: If you're using Docker Compose V1 (older installations), use `docker-compose` instead of `docker compose`.
+# Set up environment variables
+cp .env.example .env
+# Edit .env to configure your server
+```
 
-4. **View logs:**
-   ```bash
-   docker compose logs -f
-   ```
+### 2. Start the Server
 
-5. **Stop the server:**
-   ```bash
-   docker compose down
-   ```
+From the repository root:
+
+```bash
+# Start the server
+cd server
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop the server
+docker compose down
+```
+
+**Note**: If you're using Docker Compose V1 (older installations), use `docker-compose` instead of `docker compose`.
+
+### 3. Connect to the Server
+
+#### Java Edition Clients
+1. Open Minecraft Java Edition
+2. Click "Multiplayer" → "Add Server"
+3. Enter your server IP address (or `localhost` if connecting from the same machine)
+4. Port is `25565` (default, can be omitted)
+
+#### Nintendo Switch / Bedrock Edition Clients
+1. Open Minecraft on your Nintendo Switch
+2. Go to "Play" → "Servers" tab
+3. Click "Add Server"
+4. Enter:
+   - **Server Name**: Any name you want
+   - **Server Address**: Your server's IP address
+   - **Port**: `19132`
+5. Save and connect
+
+**Note**: If connecting from outside your local network, configure port forwarding on your router (ports 25565 TCP and 19132 UDP) and use your public IP address.
 
 ## Configuration
 
@@ -66,9 +112,32 @@ Make sure these ports are open in your firewall/router.
 
 ### Server Properties
 
-The `server.properties` file will be created automatically on first run. You can mount your own by uncommenting the volume mount in `docker-compose.yml`.
+The `server.properties` file will be created automatically on first run in the server container. You can customize it by copying it from the container or mounting a custom file.
 
-### Security Notes
+## Plugin Development
+
+This repository is organized for developing custom Minecraft plugins. See [`plugins/README.md`](plugins/README.md) for details on plugin development.
+
+### Planned Plugins
+
+- **Landscape Generator**: Procedural landscape generation
+- **Feature Generator**: Generate structures, biomes, terrain features
+- **POI Generator**: Generate points of interest, landmarks, dungeons
+
+### Building and Testing Plugins
+
+1. Develop your plugin in `plugins/custom/your-plugin/`
+2. Build your plugin using your build tool (Gradle/Maven)
+3. Copy the built `.jar` to `runtime/plugins/`
+4. Restart the server to load the plugin
+
+## Server Components
+
+The server uses:
+- **PaperMC**: A high-performance fork of Spigot for Java Edition
+- **GeyserMC**: A plugin/proxy that translates Bedrock protocol to Java protocol, allowing Bedrock clients to connect
+
+## Security Notes
 
 **No Default Credentials**: This server setup does not include any default username/password combinations. 
 
@@ -78,49 +147,6 @@ The `server.properties` file will be created automatically on first run. You can
 
 - **Environment Variables**: All configuration is stored in `.env` (git-ignored) to prevent exposing settings publicly.
 
-## Connecting to the Server
-
-### Java Edition Clients
-
-1. Open Minecraft Java Edition
-2. Click "Multiplayer"
-3. Click "Add Server"
-4. Enter your server IP address (or `localhost` if connecting from the same machine)
-5. Port is `25565` (default, can be omitted)
-
-### Nintendo Switch / Bedrock Edition Clients
-
-1. Open Minecraft on your Nintendo Switch
-2. Go to "Play" → "Servers" tab
-3. Scroll down to find "Add Server" or use one of the empty server slots
-4. Enter:
-   - **Server Name**: Any name you want
-   - **Server Address**: Your server's IP address
-   - **Port**: `19132`
-5. Save and connect
-
-**Note**: If you're connecting from outside your local network, you'll need to:
-- Configure port forwarding on your router (ports 25565 TCP and 19132 UDP)
-- Use your public IP address
-
-## Data Persistence
-
-The server data is stored in:
-- `./data/`: World files
-- `./plugins/`: Plugin files (GeyserMC will be auto-downloaded)
-- `./logs/`: Server logs
-- `./server.properties`: Server configuration
-
-## GeyserMC Configuration
-
-After first run, GeyserMC will generate configuration files in `plugins/Geyser-Spigot/`. Key settings:
-
-- **Bedrock Port**: Default is `19132`
-- **Authentication**: Set in `config.yml` (default uses online mode)
-- **Remote Server**: If using standalone mode (not included here)
-
-You can edit the Geyser config by mounting the config directory or copying it out of the container.
-
 ## Troubleshooting
 
 ### Server won't start
@@ -129,11 +155,12 @@ You can edit the Geyser config by mounting the config directory or copying it ou
 - Make sure `EULA=true` is set in your `.env` file
 - Check logs: `docker compose logs` (or `docker-compose logs` for V1)
 - Ensure ports are not already in use
+- Make sure you're running commands from the `server/` directory
 
 ### Can't connect from Bedrock clients
 
 - Verify the UDP port `19132` is open and forwarded
-- Check GeyserMC logs in `plugins/Geyser-Spigot/`
+- Check GeyserMC logs in `runtime/plugins/Geyser-Spigot/`
 - Make sure GeyserMC plugin loaded successfully (check server logs)
 - Try disabling online mode temporarily to test (set `online-mode=false` in `server.properties`)
 
@@ -143,11 +170,12 @@ You can edit the Geyser config by mounting the config directory or copying it ou
 - Adjust view distance in `server.properties`
 - Consider using a more powerful server/computer
 
-## Building the Image
+## Building the Docker Image
 
 To build the Docker image manually:
 
 ```bash
+cd server
 docker build -t minecraft-server .
 ```
 
@@ -158,3 +186,6 @@ This setup uses:
 - GeyserMC (MIT)
 - Minecraft (Mojang - requires EULA acceptance)
 
+## Contributing
+
+This is a personal project for developing custom Minecraft plugins and world generation tools. See the plugin development section for details on the planned features.

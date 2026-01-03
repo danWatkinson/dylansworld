@@ -6,7 +6,7 @@ services:
       - "25565:25565/tcp"   # Java Edition port
       - "19132:19132/udp"   # Bedrock Edition port
     env_file:
-      - .env
+      - ../.env
     environment:
       - EULA=${EULA:-true}
       - MINECRAFT_VERSION=${MINECRAFT_VERSION:-latest}
@@ -14,9 +14,9 @@ services:
       - GEYSER_VERSION=${GEYSER_VERSION:-latest}
       - MEMORY=${MEMORY:-2G}
     volumes:
-      - ./data:/minecraft/world
-      - ./plugins:/minecraft/plugins
-      - ./logs:/minecraft/logs
+      - ../runtime/data:/minecraft/world
+      - ../runtime/plugins:/minecraft/plugins
+      - ../runtime/logs:/minecraft/logs
       # Uncomment the line below if you want to persist server.properties
       # - ./server.properties:/minecraft/server.properties
     restart: unless-stopped
