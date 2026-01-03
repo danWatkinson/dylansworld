@@ -1,0 +1,16 @@
+# Minecraft server files
+data/
+logs/
+plugins/*.jar
+server.properties
+eula.txt
+*.jar
+*.log
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+

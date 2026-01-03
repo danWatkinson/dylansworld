@@ -1,0 +1,12 @@
+data/
+logs/
+plugins/
+*.jar
+*.log
+eula.txt
+server.properties
+geyser-config/
+.DS_Store
+.git/
+.gitignore
+
